@@ -1,8 +1,6 @@
 ---
 title: "克苏鲁的呼唤 第七版"
-start_page: 3
-end_page: 3
-summary: "克苏鲁的呼唤 第七版 # 克苏鲁的呼唤 第七版 ### Sandy Petersen ### Lynn Willis ### Paul Fricker and Mike Mason 编辑 ：Scott Dorward, Badger McInnes, Mike Mason, Charlie Krank 版面设计 ：Badger McInnes and Mike Mason 版面布局 ：Badger McInnes, Nicholas..."
+start_page: 3 end_page: 3 summary: "克苏鲁的呼唤 第七版 # 克苏鲁的呼唤 第七版 ### Sandy Petersen ### Lynn Willis ### Paul Fricker and Mike Mason 编辑 ：Scott Dorward, Badger McInnes, Mike Mason, Charlie Krank 版面设计 ：Badger McInnes and Mike Mason 版面布局 ：Badger McInnes, Nicholas..."
 tags:
   - "mike"
   - "mason"
@@ -43,45 +41,7 @@ Pages: 3-3
 ### Paul Fricker and Mike Mason
 
 
-编辑 ：Scott Dorward, Badger McInnes, Mike Mason, Charlie Krank
-
-
-版面设计 ：Badger McInnes and Mike Mason
-
-
-版面布局 ：Badger McInnes, Nicholas Nacario, Charlie Krank
-
-
-艺术指导 ：Mike Mason, Meghan McLean, Daniel Skomorowski
-
-
-封面绘制 ：Sam Lamont
-
-
-章首插图 ：Jonathan Wyke, Paul Carrick, Rob Gould, François Launet, Victor Leza,
-
-
-Charles Wong, Mike Perry, Nicholas Cloister, Antonio Luis, Kalli Schulz
-
-
-内页插图 ：Rachel Kahn, Grilla, Chris Huth, Loïc Muzy, Paul Carrick, Scott Neil,Jonathan Wyke,
-
-
-Victor Leza, Sam Lamont, Celeste Burcham, Caryad, Antonio Mainez, Tom Sullivan, Marco Morte
-
-
-Cristoforo 曲线字库设计 ：Thomas Phinney
-
-
-地图绘制 ：Steff Worthington
-
-
-
-致 Lynn Willis
-
-
-
-1
+编辑 ：Scott Dorward, Badger McInnes, Mike Mason, Charlie Krank版面设计 ：Badger McInnes and Mike Mason版面布局 ：Badger McInnes, Nicholas Nacario, Charlie Krank艺术指导 ：Mike Mason, Meghan McLean, Daniel Skomorowski封面绘制 ：Sam Lamont章首插图 ：Jonathan Wyke, Paul Carrick, Rob Gould, François Launet, Victor Leza,Charles Wong, Mike Perry, Nicholas Cloister, Antonio Luis, Kalli Schulz内页插图 ：Rachel Kahn, Grilla, Chris Huth, Loïc Muzy, Paul Carrick, Scott Neil,Jonathan Wyke,Victor Leza, Sam Lamont, Celeste Burcham, Caryad, Antonio Mainez, Tom Sullivan, Marco Morte Cristoforo 曲线字库设计 ：Thomas Phinney地图绘制 ：Steff Worthington致 Lynn Willis 1
 
 
 
