@@ -1,0 +1,19 @@
+{
+  "name": "coc-investigator-builder-skill",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Publishable agent skill package for building Call of Cthulhu 7e investigators.",
+  "keywords": [
+    "skills",
+    "agent-skill",
+    "codex",
+    "claude-code",
+    "call-of-cthulhu",
+    "coc"
+  ],
+  "files": [
+    "skills/**/*",
+    "README.md"
+  ],
+  "license": "MIT"
+}

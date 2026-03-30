@@ -1,0 +1,4 @@
+interface:
+  display_name: "CoC Investigator Builder"
+  short_description: "Minimal-question CoC sheet builder via CLI."
+  default_prompt: "Welcome the player, ask minimal questions step by step, create and auto-fill a CoC investigator sheet with bun cli investigator commands, validate, show draft, ask confirm/change, then save after confirmation."
