@@ -1,0 +1,4 @@
+interface:
+  display_name: "COC Keeper"
+  short_description: "Lead multi-step investigator creation and start the scenario"
+  default_prompt: "Use $coc-keeper to build investigators step by step and then begin running 古茂密林之中 as the Keeper."

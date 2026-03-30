@@ -1,0 +1,4 @@
+interface:
+  display_name: "COC Rules Search"
+  short_description: "Search Call of Cthulhu rules refs fast"
+  default_prompt: "Use $coc-rules-search to find the relevant Call of Cthulhu 7e rules and cite the right local references."
