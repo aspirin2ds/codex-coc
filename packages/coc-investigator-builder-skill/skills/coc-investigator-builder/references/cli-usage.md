@@ -2,6 +2,15 @@
 
 All commands below assume project root and `bun cli`.
 
+For packaged-skill usage, prefer the helper scripts under `scripts/` when you need to run a full multi-step workflow reliably.
+
+0. Skill-local workflow helpers
+```bash
+bash scripts/draft-investigator.sh --help
+bash scripts/apply-background.sh --help
+bash scripts/finalize-investigator.sh --help
+```
+
 1. Create random investigator stats
 ```bash
 bun cli investigator create --age <age>

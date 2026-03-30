@@ -9,6 +9,9 @@ Use:
 - [references/coc-investigator-rules.md](references/coc-investigator-rules.md)
 - [references/cli-usage.md](references/cli-usage.md)
 - [references/example-investigator-sheet.md](references/example-investigator-sheet.md)
+- `scripts/draft-investigator.sh` for the initial draft + skill allocation pass
+- `scripts/apply-background.sh` for backstory fields
+- `scripts/finalize-investigator.sh` for final identity/finance updates and validation
 
 The bundled rules summary is self-contained and meant to travel with this package.
 
@@ -53,7 +56,31 @@ Prompt:
 
 4. Draft temporary sheet, auto-fill as much as possible, and ask for draft confirmation.
 
-Commands (apply in order):
+Preferred helper:
+```bash
+bash scripts/draft-investigator.sh \
+  --sheet-path <sheet_path> \
+  --age <age> \
+  --name "<name>" \
+  --occupation "<occupation>" \
+  --gender "<gender>" \
+  --birthplace "<birthplace>" \
+  --int <int> \
+  --str <str> \
+  --con <con> \
+  --siz <siz> \
+  --dex <dex> \
+  --app <app> \
+  --pow <pow> \
+  --edu <edu> \
+  --luck <luck> \
+  --occ-points <occ_points> \
+  --int-points <int_points> \
+  --occ <skill=points> \
+  --int-skill <skill=points>
+```
+
+Fallback raw commands:
 ```bash
 bun cli investigator markdown create --output <sheet_path> --age <age> --name "<name>" --occupation "<occupation>" --formula "edu*4"
 bun cli investigator markdown update --file <sheet_path> --set identity.sex="<gender>" --set identity.birthplace="<birthplace>"
@@ -79,7 +106,20 @@ Ask:
 Prompt:
 - `Give me a few background hints (short lines are fine): personality, beliefs, significant person, meaningful place, treasured item, and one key connection. Example: "Calm but relentless reporter; believes truth matters; mentor is Editor Chen."`
 
-Apply with:
+Preferred helper:
+```bash
+bash scripts/apply-background.sh \
+  --sheet-path <sheet_path> \
+  --personal-description "<...>" \
+  --ideology-beliefs "<...>" \
+  --significant-people "<...>" \
+  --meaningful-locations "<...>" \
+  --treasured-possessions "<...>" \
+  --traits "<...>" \
+  --key-connection "<...>"
+```
+
+Fallback raw commands:
 ```bash
 bun cli investigator markdown update --file <sheet_path> --set background.personalDescription="<...>" --set background.ideologyBeliefs="<...>" --set background.significantPeople="<...>" --set background.meaningfulLocations="<...>" --set background.treasuredPossessions="<...>" --set background.traits="<...>" --set background.keyConnection="<...>"
 bun cli investigator markdown save --file <sheet_path>
@@ -96,7 +136,22 @@ Collect:
 Prompt:
 - `Any final details to add (era, residence, player name, money/assets, gear, weapon, current conditions)? If not, say 'skip'.`
 
-Commands:
+Preferred helper:
+```bash
+bash scripts/finalize-investigator.sh \
+  --sheet-path <sheet_path> \
+  --occ-points <occ_points> \
+  --int-points <int_points> \
+  --era "<...>" \
+  --residence "<...>" \
+  --player-name "<...>" \
+  --credit-rating <n> \
+  --cash "<...>" \
+  --assets "<...>" \
+  --spending-level "<...>"
+```
+
+Fallback raw commands:
 ```bash
 bun cli investigator markdown update --file <sheet_path> --set identity.era="<...>" --set identity.residence="<...>" --set identity.playerName="<...>"
 bun cli investigator markdown update --file <sheet_path> --set finance.creditRating=<n> --set finance.cash="<...>" --set finance.assets="<...>" --set finance.spendingLevel="<...>"
@@ -105,7 +160,12 @@ bun cli investigator markdown save --file <sheet_path>
 
 7. Final confirmation, then validate/save.
 
-Commands:
+Preferred helper:
+```bash
+bash scripts/finalize-investigator.sh --sheet-path <sheet_path> --occ-points <occ_points> --int-points <int_points>
+```
+
+Fallback raw commands:
 ```bash
 bun cli investigator skills validate --file <sheet_path> --occupation-points <occ_points> --interest-points <int_points>
 bun cli investigator markdown save --file <sheet_path>
