@@ -1,0 +1,671 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/coc-investigator-builder/investigator-sheet.schema.json",
+  "title": "COC Investigator Sheet",
+  "description": "Normalized Call of Cthulhu 7th Edition investigator sheet aligned to the standard two-page character sheet, with builder, validation, and storage workflows.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "identity",
+    "attributes",
+    "derived",
+    "occupation",
+    "skills",
+    "background"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "partial",
+        "playable",
+        "validated"
+      ],
+      "default": "playable"
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "attributes": {
+      "$ref": "#/$defs/attributes"
+    },
+    "derived": {
+      "$ref": "#/$defs/derived"
+    },
+    "occupation": {
+      "$ref": "#/$defs/occupation"
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/skill"
+      }
+    },
+    "combat": {
+      "$ref": "#/$defs/combat"
+    },
+    "economics": {
+      "$ref": "#/$defs/economics"
+    },
+    "trackers": {
+      "$ref": "#/$defs/trackers"
+    },
+    "equipment": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/namedNote"
+      },
+      "default": []
+    },
+    "background": {
+      "$ref": "#/$defs/background"
+    },
+    "developments": {
+      "$ref": "#/$defs/developments"
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "builder": {
+      "$ref": "#/$defs/builder"
+    },
+    "validation": {
+      "$ref": "#/$defs/validation"
+    }
+  },
+  "$defs": {
+    "percent": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 999
+    },
+    "percentBreakdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full",
+        "half",
+        "fifth"
+      ],
+      "properties": {
+        "full": {
+          "$ref": "#/$defs/percent"
+        },
+        "half": {
+          "$ref": "#/$defs/percent"
+        },
+        "fifth": {
+          "$ref": "#/$defs/percent"
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "age"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "player": {
+          "type": "string",
+          "description": "The player name written in the top-left identity block."
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 90
+        },
+        "sex": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "era": {
+          "type": "string"
+        },
+        "setting": {
+          "type": "string"
+        },
+        "residence": {
+          "type": "string"
+        },
+        "birthplace": {
+          "type": "string"
+        },
+        "portrait": {
+          "type": "string",
+          "description": "Path or URL to portrait asset."
+        }
+      }
+    },
+    "attributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "STR",
+        "CON",
+        "SIZ",
+        "DEX",
+        "APP",
+        "INT",
+        "POW",
+        "EDU",
+        "LUCK"
+      ],
+      "properties": {
+        "STR": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "CON": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "SIZ": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "DEX": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "APP": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "INT": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "POW": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "EDU": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "LUCK": {
+          "$ref": "#/$defs/percentBreakdown"
+        }
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "SAN",
+        "HP",
+        "MP",
+        "MOV",
+        "DB",
+        "Build"
+      ],
+      "properties": {
+        "SAN": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "HP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "MP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "MOV": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "DB": {
+          "type": "string",
+          "pattern": "^(?:-2|-1|0|\\+[1-9][0-9]*d6|\\+1d4|\\+1d6)$"
+        },
+        "Build": {
+          "type": "integer",
+          "minimum": -2
+        },
+        "maxSanity": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "occupation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "isCustom": {
+          "type": "boolean",
+          "default": false
+        },
+        "pointsFormula": {
+          "type": "string",
+          "description": "For example: EDUx4 or EDUx2+DEXx2."
+        },
+        "occupationPoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interestPoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "creditRating": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "creditRatingRange": {
+          "$ref": "#/$defs/range"
+        },
+        "lifestyle": {
+          "type": "string",
+          "enum": [
+            "身无分文",
+            "贫穷",
+            "标准",
+            "小康",
+            "富裕",
+            "豪富"
+          ]
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "specialization": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "occupation",
+            "interest",
+            "starting",
+            "combat",
+            "language",
+            "other"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "base": {
+          "$ref": "#/$defs/percent"
+        },
+        "checked": {
+          "type": "boolean",
+          "description": "Whether the printed checkbox for this skill is marked.",
+          "default": false
+        },
+        "occupationPoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interestPoints": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "combat": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dodge": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "brawl": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "attacks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/attack"
+          },
+          "default": []
+        }
+      }
+    },
+    "attack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skillName": {
+          "type": "string"
+        },
+        "skillValue": {
+          "$ref": "#/$defs/percentBreakdown"
+        },
+        "damage": {
+          "type": "string"
+        },
+        "range": {
+          "type": "string"
+        },
+        "ammo": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "economics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cash": {
+          "type": "number",
+          "minimum": 0
+        },
+        "spendingLevel": {
+          "type": "number",
+          "minimum": 0
+        },
+        "assets": {
+          "type": "number",
+          "minimum": 0
+        },
+        "assetNotes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "residenceStyle": {
+          "type": "string"
+        },
+        "travelStyle": {
+          "type": "string"
+        }
+      }
+    },
+    "trackers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currentHP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxHP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currentMP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxMP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currentSAN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "startingSAN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "currentLuck": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "majorWound": {
+          "type": "boolean",
+          "default": false
+        },
+        "unconscious": {
+          "type": "boolean",
+          "default": false
+        },
+        "dying": {
+          "type": "boolean",
+          "default": false
+        },
+        "temporaryInsanity": {
+          "type": "boolean",
+          "default": false
+        },
+        "indefiniteInsanity": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "namedNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "personalDescription": {
+          "type": "string"
+        },
+        "ideologyBeliefs": {
+          "type": "string"
+        },
+        "significantPeople": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "meaningfulLocations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "treasuredPossessions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "backstory": {
+          "type": "string"
+        },
+        "keyConnection": {
+          "type": "string",
+          "description": "Useful for builder output, but not a dedicated printed field on the standard sheet."
+        }
+      }
+    },
+    "developments": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "woundsScars": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "phobiasManias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "mythosTomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/namedNote"
+          },
+          "default": []
+        },
+        "spells": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/namedNote"
+          },
+          "default": []
+        },
+        "mythosEncounters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ruleSources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generatedBy": {
+          "type": "string"
+        }
+      }
+    },
+    "builder": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ageAdjustmentsApplied": {
+          "type": "boolean"
+        },
+        "eduImprovementsApplied": {
+          "type": "boolean"
+        },
+        "calculatorVersion": {
+          "type": "string"
+        },
+        "inputSnapshot": {
+          "type": "object"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      }
+    }
+  }
+}
