@@ -4,10 +4,10 @@ Use this file for the common calculations that make or break sheet consistency.
 
 ## Rule lookup order
 
-1. Search via `$coc-rules-search`.
+1. Search via the bundled rules-search workflow.
 2. Confirm in `docs/part-007-第三章-创建调查员.md`.
 3. Use `docs/part-020-第十六章-附录.md` for glossary or quick confirmation.
-4. Run `node skills/coc-investigator-builder/scripts/calc-sheet.js` once the inputs are final.
+4. Run `node skills/coc-keeper/scripts/calc-sheet.js` once the inputs are final.
 
 ## Primary creation reminders
 
@@ -58,7 +58,7 @@ If the exact `DB/Build` band or occupation formula is unclear from memory, look 
 Example:
 
 ```bash
-node skills/coc-investigator-builder/scripts/calc-sheet.js <<'JSON'
+node skills/coc-keeper/scripts/calc-sheet.js <<'JSON'
 {
   "age": 32,
   "ageAdjustmentsApplied": true,

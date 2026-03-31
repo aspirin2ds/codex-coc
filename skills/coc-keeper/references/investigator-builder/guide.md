@@ -1,9 +1,4 @@
----
-name: coc-investigator-builder
-description: Build complete or partial Call of Cthulhu 7th Edition investigator sheets from a concept, rolled stats, or incomplete character notes using the local COC rules in this workspace. Use when Codex needs to create, finish, normalize, or explain an investigator sheet, choose a fitting occupation and skills, compute derived stats, apply age adjustments, or format a playable character summary; search with `$coc-rules-search` first and only fall back to direct `./docs` lookups when needed.
----
-
-# COC Investigator Builder
+# Investigator Builder Guide
 
 ## Overview
 
@@ -17,11 +12,11 @@ Prefer rule-grounded sheet building over improvising percentages or derived stat
    - sheet completion from partial stats
    - cleanup or normalization of an existing sheet
    - explanation of build choices
-2. Use `$coc-rules-search` at [skills/coc-rules-search/SKILL.md](../coc-rules-search/SKILL.md) to find the governing rules first.
+2. Use the bundled rules-search workflow at [../rules-search/guide.md](../rules-search/guide.md) to find the governing rules first.
 3. If the search result is still ambiguous, read the relevant local docs directly under `./docs`.
-4. When the final attributes and occupation formula are known, run [scripts/calc-sheet.js](scripts/calc-sheet.js) to calculate and validate the repetitive math.
-5. Save the normalized investigator data to JSON using [schemas/investigator-sheet.schema.json](schemas/investigator-sheet.schema.json).
-6. Optionally render that JSON to Markdown with [scripts/render-sheet-markdown.js](scripts/render-sheet-markdown.js) and [templates/investigator-sheet.template.md](templates/investigator-sheet.template.md).
+4. When the final attributes and occupation formula are known, run [../../scripts/calc-sheet.js](../../scripts/calc-sheet.js) to calculate and validate the repetitive math.
+5. Save the normalized investigator data to JSON using [../../schemas/investigator-sheet.schema.json](../../schemas/investigator-sheet.schema.json), with the default canonical location under `play-data/investigators/`.
+6. Optionally render that JSON to Markdown with [../../scripts/render-sheet-markdown.js](../../scripts/render-sheet-markdown.js) and [../../templates/investigator-sheet.template.md](../../templates/investigator-sheet.template.md), also under `play-data/investigators/` by default.
 7. State assumptions clearly when the user did not provide enough inputs.
 
 ## Workflow
@@ -42,7 +37,7 @@ If inputs are missing, make conservative assumptions and say so after the sheet.
 
 ### 2. Search the rules before deciding
 
-Start with `$coc-rules-search` for:
+Start with the bundled rules-search workflow for:
 - attribute generation and age adjustments
 - derived stats such as HP, SAN, MP, MOV, DB, Build
 - occupation skill-point formulas and credit rating
@@ -52,7 +47,7 @@ Then read the local chapter directly only if the rule is still unclear.
 
 ### 2.5 Use the calculator once inputs are stable
 
-Use [scripts/calc-sheet.js](scripts/calc-sheet.js) after the core build choices are known.
+Use [../../scripts/calc-sheet.js](../../scripts/calc-sheet.js) after the core build choices are known.
 This script is the fast path for:
 - SAN, MP, HP, MOV, DB, Build
 - occupation points from a formula like `EDUx4` or `EDUx2+DEXx2`
@@ -84,7 +79,7 @@ Do the crunchy parts first:
 - compute HP, SAN, MP, MOV, DB, and Build
 - compute half and fifth values where useful
 
-Use [references/derived-stats.md](references/derived-stats.md) for the common formulas and lookup order.
+Use [derived-stats.md](derived-stats.md) for the common formulas and lookup order.
 
 ### 5. Keep occupation and skills coherent
 
@@ -96,28 +91,28 @@ If the user asks for a specific archetype that does not map cleanly to a listed 
 
 Use this output order:
 1. generate the data with the calculator, then validate it
-2. save the data to JSON using the schema
-3. optionally render that JSON to Markdown with the template script
+2. save the data to JSON using the schema in `play-data/investigators/`
+3. optionally render that JSON to Markdown with the template script in the same `play-data/investigators/` area
 
 The JSON file is the source of truth.
 Markdown is a derived presentation format, not the canonical record.
 
 ## Reference Files
 
-- [references/build-workflow.md](references/build-workflow.md)
+- [build-workflow.md](build-workflow.md)
   End-to-end process for creating or completing a sheet.
-- [references/derived-stats.md](references/derived-stats.md)
+- [derived-stats.md](derived-stats.md)
   High-signal formulas, rule order, and where to verify them.
-- [references/output-template.md](references/output-template.md)
+- [output-template.md](output-template.md)
   Compact output shape for JSON-first and optional Markdown output.
-- [scripts/calc-sheet.js](scripts/calc-sheet.js)
+- [../../scripts/calc-sheet.js](../../scripts/calc-sheet.js)
   Deterministic calculator and validator for the repetitive sheet math.
-- [scripts/render-sheet-markdown.js](scripts/render-sheet-markdown.js)
+- [../../scripts/render-sheet-markdown.js](../../scripts/render-sheet-markdown.js)
   Render a normalized investigator JSON file into a Markdown sheet using the repo template.
 
 ## Constraints
 
-- Use `$coc-rules-search` first for rule lookup.
+- Use the bundled rules-search workflow first for rule lookup.
 - If still confused, inspect `./docs` directly rather than guessing.
 - Preserve user-provided numbers unless they conflict with the rules; if they conflict, say what changed and why.
 - Do not invent unsupported occupation formulas when the book or a reasonable custom occupation path can be used.

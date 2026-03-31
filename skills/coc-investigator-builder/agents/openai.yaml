@@ -1,4 +1,0 @@
-interface:
-  display_name: "COC Investigator Builder"
-  short_description: "Build a usable COC investigator sheet"
-  default_prompt: "Use $coc-investigator-builder to create a complete Call of Cthulhu investigator sheet from concept or rolled stats."

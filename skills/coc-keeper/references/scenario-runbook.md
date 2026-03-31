@@ -104,4 +104,4 @@ Use these in rough order, but allow detours:
 - Mixed: Jane saved but the plan partly succeeds.
 - Bad: the crystal reaches the lake and the horror escalates.
 
-Apply sanity rewards or losses using the local scenario notes and confirm rule details through `$coc-rules-search` when needed.
+Apply sanity rewards or losses using the local scenario notes and confirm rule details through the bundled rules-search workflow when needed.

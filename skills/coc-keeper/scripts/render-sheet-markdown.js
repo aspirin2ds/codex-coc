@@ -2,6 +2,8 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const DEFAULT_PLAY_DIR = "play-data";
+const DEFAULT_INVESTIGATOR_DIR = path.join(DEFAULT_PLAY_DIR, "investigators");
 
 function die(message, code = 1) {
   console.error(message);
@@ -22,7 +24,7 @@ function parseArgs(argv) {
     else if (arg === "--output") args.output = argv[++i];
     else if (arg === "--help" || arg === "-h") {
       process.stdout.write(
-        "Usage: node skills/coc-investigator-builder/scripts/render-sheet-markdown.js --input <sheet.json> [--template <template.md>] [--output <file.md>]\n",
+        "Usage: node skills/coc-keeper/scripts/render-sheet-markdown.js --input <sheet.json> [--template <template.md>] [--output <file.md>]\n",
       );
       process.exit(0);
     } else {
@@ -87,9 +89,38 @@ function formatNamedNote(item) {
   return `${item.name}：${item.notes}`;
 }
 
+function normalizeSkills(skills, fallbackBreakdowns) {
+  if (Array.isArray(skills)) return skills;
+  if (!skills || typeof skills !== "object") return [];
+  return Object.entries(skills).map(([name, rawValue]) => {
+    const breakdown = fallbackBreakdowns?.[name];
+    const numeric = Number(rawValue);
+    const full = breakdown?.full ?? (Number.isFinite(numeric) ? numeric : null);
+    return {
+      name,
+      specialization: null,
+      category: null,
+      value: breakdown || {
+        full,
+        half: Number.isFinite(full) ? Math.floor(full / 2) : null,
+        fifth: Number.isFinite(full) ? Math.floor(full / 5) : null,
+      },
+    };
+  });
+}
+
 function bulletList(items, fallback = "- —") {
   if (!items || !items.length) return fallback;
   return items.map((item) => `- ${item}`).join("\n");
+}
+
+function normalizeAssumptions(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (typeof value === "object") {
+    return Object.entries(value).map(([key, entry]) => `${key}=${entry}`);
+  }
+  return [String(value)];
 }
 
 function block(lines, fallback = "- —") {
@@ -112,6 +143,7 @@ function table(headers, rows, fallback = "- —") {
 function buildContext(sheet) {
   const era = [sheet.identity?.era, sheet.identity?.setting].filter(Boolean).join(" / ");
   const attributesOrder = ["STR", "CON", "SIZ", "DEX", "APP", "INT", "POW", "EDU", "LUCK"];
+  const normalizedSkills = normalizeSkills(sheet.skills, sheet.skillsHalfFifth);
 
   const attributesList = attributesOrder.map((key) =>
     formatBreakdown(key, sheet.attributes?.[key]),
@@ -172,7 +204,7 @@ function buildContext(sheet) {
 
   const notesList = [
     ...((sheet.notes || []).map((note) => `备注：${note}`)),
-    ...((sheet.assumptions || []).map((note) => `假设：${note}`)),
+    ...(normalizeAssumptions(sheet.assumptions).map((note) => `假设：${note}`)),
     ...((sheet.validation?.warnings || []).map((note) => `警告：${note}`)),
   ];
 
@@ -189,7 +221,7 @@ function buildContext(sheet) {
     occupation_table: table(["项目", "内容"], occupationList),
     skills_table: table(
       ["技能", "当前值", "半值", "五分之一", "类别"],
-      (sheet.skills || []).map((skill) => [
+      normalizedSkills.map((skill) => [
         skill.specialization ? `${skill.name}(${skill.specialization})` : skill.name,
         asText(skill.value?.full),
         asText(skill.value?.half),
@@ -223,7 +255,7 @@ function renderTemplate(template, sheet) {
 
 function defaultOutputPath(inputPath) {
   const parsed = path.parse(inputPath);
-  return path.join(parsed.dir, `${parsed.name}.md`);
+  return path.join(DEFAULT_INVESTIGATOR_DIR, `${parsed.name}.md`);
 }
 
 function main() {
@@ -232,7 +264,7 @@ function main() {
   const inputPath = path.resolve(rootDir, args.input);
   const templatePath = path.resolve(
     rootDir,
-    args.template || "skills/coc-investigator-builder/templates/investigator-sheet.template.md",
+    args.template || "skills/coc-keeper/templates/investigator-sheet.template.md",
   );
   const outputPath = path.resolve(rootDir, args.output || defaultOutputPath(args.input));
 

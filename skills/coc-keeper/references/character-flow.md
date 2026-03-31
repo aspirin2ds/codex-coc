@@ -23,12 +23,12 @@ If the player hesitates, offer:
 
 Ask this before starting from zero:
 
-- `你已经有建好的调查员卡吗？如果有，直接把现有角色卡或关键数据给我，我会用 $coc-investigator-builder 整理成可直接开团的版本。`
+- `你已经有建好的调查员卡吗？如果有，直接把现有角色卡或关键数据给我，我会用当前技能内置的建卡流程整理成可直接开团的版本。`
 
 If the player has a sheet:
 
 - preserve their numbers first
-- use `$coc-investigator-builder` to normalize, complete missing fields, and save JSON/Markdown
+- use the bundled investigator-building workflow to normalize, complete missing fields, and save JSON/Markdown
 - only ask follow-up questions for missing identity, skills, or background hooks
 
 If the player does not have a sheet, continue to Step 3.
@@ -98,8 +98,8 @@ One strong hook is better than four bland facts.
 
 When the narrative inputs are stable:
 
-1. use `$coc-rules-search` for any rule uncertainty
-2. use `$coc-investigator-builder` to finish the sheet
+1. use the bundled rules-search workflow for any rule uncertainty
+2. use the bundled investigator-building workflow to finish the sheet
 3. save JSON first
 4. optionally render Markdown
 5. show the player a compact summary

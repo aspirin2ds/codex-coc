@@ -2,6 +2,9 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const DEFAULT_PLAY_DIR = "play-data";
+const DEFAULT_SESSION_DIR = path.join(DEFAULT_PLAY_DIR, "sessions");
+const DEFAULT_SESSION_FILE = path.join(DEFAULT_SESSION_DIR, "current-session.json");
 
 function die(message, code = 1) {
   console.error(message);
@@ -38,10 +41,36 @@ function parseArgs(argv) {
           "  node skills/coc-keeper/scripts/session-state.js show --input <file>",
           "  node skills/coc-keeper/scripts/session-state.js update --input <file> [--output <file>] [--set a.b=value] [--push clues=value]",
           "",
+          `Default session file: ${DEFAULT_SESSION_FILE}`,
+          "",
+          "Important investigator fields:",
+          "  investigators.<id>.name",
+          "  investigators.<id>.hp.current",
+          "  investigators.<id>.hp.max",
+          "  investigators.<id>.san.current",
+          "  investigators.<id>.san.max",
+          "  investigators.<id>.mp.current",
+          "  investigators.<id>.mp.max",
+          "  investigators.<id>.luck",
+          "  investigators.<id>.mov",
+          "  investigators.<id>.status.conscious",
+          "  investigators.<id>.status.dying",
+          "  investigators.<id>.status.majorWound",
+          "  investigators.<id>.status.tempInsanity",
+          "  investigators.<id>.status.indefInsanity",
+          "  investigators.<id>.status.location",
+          "  investigators.<id>.status.summary",
+          "  investigators.<id>.injuries",
+          "  investigators.<id>.conditions",
+          "  investigators.<id>.inventory",
+          "  investigators.<id>.notes",
+          "",
           "Examples:",
-          "  node skills/coc-keeper/scripts/session-state.js init --output tmp/coc-session.json --scenario 古茂密林之中",
-          "  node skills/coc-keeper/scripts/session-state.js update --input tmp/coc-session.json --set current.day=1 --set current.timeOfDay=night --set current.location=黑水湖外圈",
-          "  node skills/coc-keeper/scripts/session-state.js update --input tmp/coc-session.json --push clues=简被带往黑水湖 --push npcs.safe=简",
+          `  node skills/coc-keeper/scripts/session-state.js init --output ${DEFAULT_SESSION_FILE} --scenario 古茂密林之中`,
+          `  node skills/coc-keeper/scripts/session-state.js update --input ${DEFAULT_SESSION_FILE} --set current.day=1 --set current.timeOfDay=night --set current.location=黑水湖外圈`,
+          `  node skills/coc-keeper/scripts/session-state.js update --input ${DEFAULT_SESSION_FILE} --push clues=简被带往黑水湖 --push npcs.safe=简`,
+          `  node skills/coc-keeper/scripts/session-state.js update --input ${DEFAULT_SESSION_FILE} --set investigators.harvey.name='Harvey Walters' --set investigators.harvey.hp.current=8 --set investigators.harvey.san.current=41 --set investigators.harvey.status.majorWound=true`,
+          `  node skills/coc-keeper/scripts/session-state.js update --input ${DEFAULT_SESSION_FILE} --push investigators.harvey.injuries=右臂撕裂伤 --push investigators.harvey.conditions=疼痛 --push investigators.harvey.inventory=左轮手枪`,
         ].join("\n"),
       );
       process.exit(0);
@@ -113,7 +142,7 @@ function writeJson(filePath, data) {
 
 function makeInitialState(scenario) {
   return {
-    schemaVersion: "1.0.0",
+    schemaVersion: "1.1.0",
     scenario: scenario || "古茂密林之中",
     current: {
       day: 0,
@@ -127,7 +156,7 @@ function makeInitialState(scenario) {
       status: "active",
       notes: [],
     },
-    investigators: [],
+    investigators: {},
     npcs: {
       safe: [],
       missing: [],
@@ -146,7 +175,7 @@ function main() {
   const args = parseArgs(process.argv.slice(2));
 
   if (args.command === "init") {
-    const output = args.output || "tmp/coc-session.json";
+    const output = args.output || DEFAULT_SESSION_FILE;
     const state = makeInitialState(args.scenario);
     writeJson(output, state);
     process.stdout.write(`${JSON.stringify({ ok: true, output, state }, null, 2)}\n`);

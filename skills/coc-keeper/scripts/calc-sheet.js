@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
 const fs = require("node:fs");
+const path = require("node:path");
 
 const REQUIRED_ATTRS = ["STR", "CON", "SIZ", "DEX", "APP", "INT", "POW", "EDU"];
 const OPTIONAL_ATTRS = ["LUCK"];
+const DEFAULT_PLAY_DIR = "play-data";
+const DEFAULT_INVESTIGATOR_DIR = path.join(DEFAULT_PLAY_DIR, "investigators");
+const CALCULATOR_VERSION = "1.1.0";
 
 function die(message, code = 1) {
   console.error(message);
@@ -17,18 +21,45 @@ function floorDiv(value, divisor) {
 function parseArgs(argv) {
   const args = {
     inputPath: null,
+    outputPath: null,
     compact: false,
     help: false,
   };
 
-  for (const arg of argv) {
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i];
     if (arg === "--compact") args.compact = true;
     else if (arg === "--help" || arg === "-h") args.help = true;
+    else if (arg === "--output") args.outputPath = argv[++i];
+    else if (arg.startsWith("--output=")) args.outputPath = arg.slice("--output=".length);
     else if (!args.inputPath) args.inputPath = arg;
     else die(`Unknown argument: ${arg}`);
   }
 
   return args;
+}
+
+function ensureParentDir(filePath) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+}
+
+function slugify(value, fallback = "investigator") {
+  const slug = String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+    .replace(/^-+|-+$/g, "");
+  return slug || fallback;
+}
+
+function defaultOutputPath(args, input) {
+  if (args.outputPath) return args.outputPath;
+  if (args.inputPath) {
+    const parsed = path.parse(args.inputPath);
+    return path.join(DEFAULT_INVESTIGATOR_DIR, `${parsed.name}.json`);
+  }
+  const identityName = input?.identity?.name || input?.name;
+  return path.join(DEFAULT_INVESTIGATOR_DIR, `${slugify(identityName)}.json`);
 }
 
 function readInput(inputPath) {
@@ -166,6 +197,86 @@ function computeHalfFifthMap(record) {
   return out;
 }
 
+function toBreakdown(value) {
+  if (!Number.isFinite(value)) return null;
+  return {
+    full: value,
+    half: floorDiv(value, 2),
+    fifth: floorDiv(value, 5),
+  };
+}
+
+function toStringArray(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map(String);
+  return [String(value)];
+}
+
+function normalizeIdentity(input, age) {
+  const raw = input.identity && typeof input.identity === "object" ? input.identity : {};
+  const identity = {};
+
+  if (raw.name != null) identity.name = String(raw.name);
+  else if (input.name != null) identity.name = String(input.name);
+  else identity.name = "未命名调查员";
+
+  if (age != null) identity.age = age;
+  if (raw.player != null) identity.player = String(raw.player);
+  if (raw.sex != null) identity.sex = String(raw.sex);
+  if (raw.gender != null) identity.gender = String(raw.gender);
+  if (raw.era != null) identity.era = String(raw.era);
+  if (raw.setting != null) identity.setting = String(raw.setting);
+  if (raw.residence != null) identity.residence = String(raw.residence);
+  if (raw.birthplace != null) identity.birthplace = String(raw.birthplace);
+  if (raw.portrait != null) identity.portrait = String(raw.portrait);
+
+  return identity;
+}
+
+function normalizeSkillEntries(rawSkills, fallbackBreakdowns) {
+  if (Array.isArray(rawSkills)) {
+    return rawSkills
+      .filter((skill) => skill && typeof skill === "object" && skill.name)
+      .map((skill) => {
+        const numeric = Number(skill.value?.full ?? skill.value ?? skill.full ?? skill.base);
+        const breakdown = skill.value && typeof skill.value === "object"
+          ? skill.value
+          : fallbackBreakdowns?.[skill.name] || toBreakdown(numeric);
+        if (!breakdown) return null;
+
+        const normalized = {
+          name: String(skill.name),
+          value: breakdown,
+        };
+        if (skill.specialization != null) normalized.specialization = String(skill.specialization);
+        if (skill.category != null) normalized.category = String(skill.category);
+        if (skill.base != null && Number.isFinite(Number(skill.base))) normalized.base = Number(skill.base);
+        if (skill.checked != null) normalized.checked = Boolean(skill.checked);
+        if (skill.occupationPoints != null && Number.isFinite(Number(skill.occupationPoints))) {
+          normalized.occupationPoints = Number(skill.occupationPoints);
+        }
+        if (skill.interestPoints != null && Number.isFinite(Number(skill.interestPoints))) {
+          normalized.interestPoints = Number(skill.interestPoints);
+        }
+        if (skill.notes != null) normalized.notes = String(skill.notes);
+        return normalized;
+      })
+      .filter(Boolean);
+  }
+
+  if (!rawSkills || typeof rawSkills !== "object") return [];
+
+  return Object.entries(rawSkills).flatMap(([name, rawValue]) => {
+    const numeric = Number(rawValue);
+    const breakdown = fallbackBreakdowns?.[name] || toBreakdown(numeric);
+    if (!breakdown) return [];
+    return [{
+      name,
+      value: breakdown,
+    }];
+  });
+}
+
 function compareProvidedDerived(expected, provided) {
   const mismatches = [];
   if (!provided || typeof provided !== "object") return mismatches;
@@ -201,7 +312,7 @@ function main() {
     process.stdout.write(
       [
         "Usage:",
-        "  node scripts/calc-sheet.js [input.json] [--compact]",
+        "  node scripts/calc-sheet.js [input.json] [--output=path/to/sheet.json] [--compact]",
         "",
         "Input JSON schema:",
         "  {",
@@ -212,6 +323,9 @@ function main() {
         '    "skills": {"图书馆使用":70,"心理学":40},',
         '    "derived": {"HP":12,"MOV":8}',
         "  }",
+        "",
+        "Default output:",
+        `  ${DEFAULT_INVESTIGATOR_DIR}/<input-file-stem>.json`,
       ].join("\n"),
     );
     process.exit(0);
@@ -270,15 +384,17 @@ function main() {
     }
   }
 
-  const skillValues = input.skills && typeof input.skills === "object" ? input.skills : {};
-  const normalizedSkills = {};
-  for (const [key, value] of Object.entries(skillValues)) {
-    const numeric = Number(value);
-    if (!Number.isFinite(numeric)) {
-      warnings.push(`Skill ${key} is not numeric and was skipped.`);
-      continue;
+  const rawSkills = input.skills && typeof input.skills === "object" ? input.skills : [];
+  const normalizedSkillValues = {};
+  if (!Array.isArray(rawSkills) && rawSkills && typeof rawSkills === "object") {
+    for (const [key, value] of Object.entries(rawSkills)) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) {
+        warnings.push(`Skill ${key} is not numeric and was skipped.`);
+        continue;
+      }
+      normalizedSkillValues[key] = numeric;
     }
-    normalizedSkills[key] = numeric;
   }
 
   const mismatches = compareProvidedDerived(derived, input.derived);
@@ -302,34 +418,68 @@ function main() {
     warnings.push("LUCK is missing; the script cannot validate luck-dependent fields.");
   }
 
+  const attributesHalfFifth = computeHalfFifthMap(attrs);
+  const skillsHalfFifth = computeHalfFifthMap(normalizedSkillValues);
+  const normalizedSkills = normalizeSkillEntries(input.skills, skillsHalfFifth);
+  const normalizedIdentity = normalizeIdentity(input, age);
+  const occupationRange = occupation?.creditRating != null ? parseCreditRange(occupation.creditRating) : null;
+
   const result = {
-    ok: warnings.length === 0,
-    assumptions: {
-      attributesAreFinal: true,
-      noRandomRollingPerformed: true,
-      noAutomaticAgeAdjustmentsApplied: true,
+    schemaVersion: "1.0.0",
+    status: "playable",
+    identity: normalizedIdentity,
+    attributes: attributesHalfFifth,
+    derived: {
+      SAN: toBreakdown(derived.SAN),
+      HP: derived.HP,
+      MP: derived.MP,
+      MOV: derived.MOV,
+      DB: derived.DB,
+      Build: derived.Build,
+      maxSanity: 99,
     },
     occupation: occupation
       ? {
-          name: occupation.name || null,
+          name: occupation.name || "未定职业",
           pointsFormula: occupation.pointsFormula || null,
-          points: occupationPoints,
-          creditRatingRange: occupation.creditRating || null,
+          occupationPoints,
+          interestPoints,
+          ...(input.creditRating != null ? { creditRating } : {}),
+          ...(occupationRange ? { creditRatingRange: occupationRange } : {}),
+          ...(creditSummary?.lifestyle ? { lifestyle: creditSummary.lifestyle } : {}),
+          ...(occupation.description ? { description: String(occupation.description) } : {}),
         }
-      : null,
-    attributes: attrs,
-    attributesHalfFifth: computeHalfFifthMap(attrs),
-    derived,
-    budgets: {
-      occupationPoints,
-      interestPoints,
-      ownLanguage,
-    },
-    creditRating: creditSummary,
+      : {
+          name: "未定职业",
+          interestPoints,
+        },
     skills: normalizedSkills,
-    skillsHalfFifth: computeHalfFifthMap(normalizedSkills),
-    warnings,
+    background: input.background && typeof input.background === "object" ? input.background : {},
+    source: {
+      generatedAt: new Date().toISOString(),
+      generatedBy: "skills/coc-keeper/scripts/calc-sheet.js",
+    },
+    builder: {
+      ageAdjustmentsApplied: input.ageAdjustmentsApplied === true,
+      eduImprovementsApplied: input.eduImprovementsApplied === true,
+      calculatorVersion: CALCULATOR_VERSION,
+      inputSnapshot: input,
+    },
+    validation: {
+      ok: warnings.length === 0,
+      warnings,
+    },
+    assumptions: [
+      "attributesAreFinal",
+      "noRandomRollingPerformed",
+      "noAutomaticAgeAdjustmentsApplied",
+      `ownLanguageBase=${ownLanguage}`,
+    ],
   };
+
+  const outputPath = path.resolve(process.cwd(), defaultOutputPath(args, input));
+  ensureParentDir(outputPath);
+  fs.writeFileSync(outputPath, `${JSON.stringify(result, null, args.compact ? 0 : 2)}\n`);
 
   process.stdout.write(JSON.stringify(result, null, args.compact ? 0 : 2));
   process.stdout.write("\n");

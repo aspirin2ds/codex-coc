@@ -1,0 +1,147 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "playable",
+  "identity": {
+    "name": "张三",
+    "age": 32
+  },
+  "attributes": {
+    "STR": {
+      "full": 50,
+      "half": 25,
+      "fifth": 10
+    },
+    "CON": {
+      "full": 60,
+      "half": 30,
+      "fifth": 12
+    },
+    "SIZ": {
+      "full": 65,
+      "half": 32,
+      "fifth": 13
+    },
+    "DEX": {
+      "full": 55,
+      "half": 27,
+      "fifth": 11
+    },
+    "APP": {
+      "full": 50,
+      "half": 25,
+      "fifth": 10
+    },
+    "INT": {
+      "full": 70,
+      "half": 35,
+      "fifth": 14
+    },
+    "POW": {
+      "full": 60,
+      "half": 30,
+      "fifth": 12
+    },
+    "EDU": {
+      "full": 80,
+      "half": 40,
+      "fifth": 16
+    },
+    "LUCK": {
+      "full": 55,
+      "half": 27,
+      "fifth": 11
+    }
+  },
+  "derived": {
+    "SAN": {
+      "full": 60,
+      "half": 30,
+      "fifth": 12
+    },
+    "HP": 12,
+    "MP": 12,
+    "MOV": 7,
+    "DB": "0",
+    "Build": 0,
+    "maxSanity": 99
+  },
+  "occupation": {
+    "name": "教授",
+    "pointsFormula": "EDUx4",
+    "occupationPoints": 320,
+    "interestPoints": 140,
+    "creditRating": 55,
+    "creditRatingRange": {
+      "min": 40,
+      "max": 80
+    },
+    "lifestyle": "小康"
+  },
+  "skills": [
+    {
+      "name": "图书馆使用",
+      "value": {
+        "full": 70,
+        "half": 35,
+        "fifth": 14
+      }
+    },
+    {
+      "name": "心理学",
+      "value": {
+        "full": 40,
+        "half": 20,
+        "fifth": 8
+      }
+    }
+  ],
+  "background": {},
+  "source": {
+    "generatedAt": "2026-03-31T03:03:10.436Z",
+    "generatedBy": "skills/coc-keeper/scripts/calc-sheet.js"
+  },
+  "builder": {
+    "ageAdjustmentsApplied": false,
+    "eduImprovementsApplied": false,
+    "calculatorVersion": "1.1.0",
+    "inputSnapshot": {
+      "identity": {
+        "name": "张三"
+      },
+      "age": 32,
+      "attributes": {
+        "STR": 50,
+        "CON": 60,
+        "SIZ": 65,
+        "DEX": 55,
+        "APP": 50,
+        "INT": 70,
+        "POW": 60,
+        "EDU": 80,
+        "LUCK": 55
+      },
+      "occupation": {
+        "name": "教授",
+        "pointsFormula": "EDUx4",
+        "creditRating": "40-80"
+      },
+      "creditRating": 55,
+      "skills": {
+        "图书馆使用": 70,
+        "心理学": 40
+      }
+    }
+  },
+  "validation": {
+    "ok": false,
+    "warnings": [
+      "Age is 20+ and eduImprovementsApplied is not true; verify EDU improvement checks were already resolved if needed."
+    ]
+  },
+  "assumptions": [
+    "attributesAreFinal",
+    "noRandomRollingPerformed",
+    "noAutomaticAgeAdjustmentsApplied",
+    "ownLanguageBase=80"
+  ]
+}

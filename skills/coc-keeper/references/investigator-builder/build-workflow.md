@@ -16,10 +16,10 @@ Possible inputs:
 
 If the user only gives a loose concept, build a sensible default and note assumptions.
 
-## 2. Look up rules through `$coc-rules-search`
+## 2. Look up rules through the bundled rules-search workflow
 
 Start with:
-- [skills/coc-rules-search/SKILL.md](../../coc-rules-search/SKILL.md)
+- [../rules-search/guide.md](../rules-search/guide.md)
 
 Use it to locate:
 - `docs/part-007-第三章-创建调查员.md`
@@ -39,10 +39,10 @@ If the search still leaves uncertainty, read the relevant `./docs` file directly
 6. Compute and allocate interest skill points from `INT x 2`.
 7. Fill combat-facing and practical sheet fields.
 8. Add background hooks and any useful builder-only metadata such as key connection.
-9. Run `node skills/coc-investigator-builder/scripts/calc-sheet.js` once the final inputs are stable.
+9. Run `node skills/coc-keeper/scripts/calc-sheet.js` once the final inputs are stable.
 10. Validate the computed result and resolve contradictions.
-11. Save the normalized sheet as schema-valid JSON.
-12. Only after the JSON exists, optionally render it to Markdown.
+11. Save the normalized sheet as schema-valid JSON under `play-data/investigators/`.
+12. Only after the JSON exists, optionally render it to Markdown in the same `play-data/investigators/` area.
 
 The script does not choose the occupation for you.
 It accelerates the math and catches contradictions once you know the formula and CR range.

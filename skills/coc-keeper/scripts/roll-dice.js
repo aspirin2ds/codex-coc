@@ -9,16 +9,50 @@ function randomInt(sides) {
   return Math.floor(Math.random() * sides) + 1;
 }
 
-function parseFormula(formula) {
-  const match = String(formula || "").trim().match(/^(\d+)d(\d+)([+-]\d+)?$/i);
+function usage() {
+  return "Usage: node skills/coc-keeper/scripts/roll-dice.js <XdY[+/-Z]> or natural text containing one dice expression";
+}
+
+function normalizeInput(input) {
+  return String(input || "")
+    .trim()
+    .replace(/[（）]/g, (char) => (char === "（" ? "(" : ")"))
+    .replace(/[＋﹢]/g, "+")
+    .replace(/[－﹣−–—]/g, "-")
+    .replace(/[Ｄｄ]/g, "d")
+    .replace(/\s+/g, " ");
+}
+
+function extractFormula(input) {
+  const normalized = normalizeInput(input);
+  const compact = normalized
+    .replace(/\s*d\s*/gi, "d")
+    .replace(/\s*([+-])\s*/g, "$1");
+  const match = compact.match(/(?:^|[^\dd])(\d*)d(\d+)([+-]\d+)?(?=$|[^\d])/i);
+
   if (!match) {
-    die("Usage: node skills/coc-keeper/scripts/roll-dice.js <XdY[+/-Z]>");
+    die(usage());
   }
 
   return {
-    count: Number(match[1]),
+    formula: `${match[1] || "1"}d${match[2]}${match[3] || ""}`,
+    count: Number(match[1] || 1),
     sides: Number(match[2]),
     modifier: match[3] ? Number(match[3]) : 0,
+  };
+}
+
+function parseFormula(formula) {
+  const match = extractFormula(formula);
+  if (!match) {
+    die(usage());
+  }
+
+  return {
+    formula: match.formula,
+    count: match.count,
+    sides: match.sides,
+    modifier: match.modifier,
   };
 }
 
@@ -55,15 +89,18 @@ function rollD100() {
 }
 
 function main() {
-  const formula = process.argv[2];
+  const formula = process.argv.slice(2).join(" ");
   if (!formula) {
-    die("Usage: node skills/coc-keeper/scripts/roll-dice.js <XdY[+/-Z]>");
+    die(usage());
   }
 
-  const { count, sides, modifier } = parseFormula(formula);
+  const { formula: parsedFormula, count, sides, modifier } = parseFormula(formula);
   const result = count === 1 && sides === 100
     ? rollD100()
     : rollStandard(count, sides, modifier);
+
+  result.input = formula;
+  result.parsedFormula = parsedFormula;
 
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
 }

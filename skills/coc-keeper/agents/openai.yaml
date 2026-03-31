@@ -1,4 +1,4 @@
 interface:
   display_name: "COC Keeper"
-  short_description: "Lead multi-step investigator creation and start the scenario"
-  default_prompt: "Use $coc-keeper to build investigators step by step and then begin running 古茂密林之中 as the Keeper."
+  short_description: "Explain the adventure, build investigators, and run it"
+  default_prompt: "Use $coc-keeper to explain the scenario premise first, build investigators step by step, and then run 古茂密林之中 while showing every dice result you roll."

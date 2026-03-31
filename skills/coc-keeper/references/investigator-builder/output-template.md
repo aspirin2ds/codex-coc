@@ -89,18 +89,19 @@ Use this as the default content shape after the schema JSON already exists.
 
 ## Structured data
 
-Use the normalized JSON Schema at [schemas/investigator-sheet.schema.json](../schemas/investigator-sheet.schema.json) when you need a machine-readable sheet for validation or storage.
+Use the normalized JSON Schema at [../../schemas/investigator-sheet.schema.json](../../schemas/investigator-sheet.schema.json) when you need a machine-readable sheet for validation or storage.
 That JSON is the canonical output of the build flow.
+By default, keep both JSON and Markdown investigator artifacts under `play-data/investigators/` so character sheets live beside the active play workspace rather than in scattered folders.
 
 ## Markdown Export
 
-Use the Markdown template at [templates/investigator-sheet.template.md](../templates/investigator-sheet.template.md) with [scripts/render-sheet-markdown.js](../scripts/render-sheet-markdown.js) when you want a readable sheet file from normalized JSON.
+Use the Markdown template at [../../templates/investigator-sheet.template.md](../../templates/investigator-sheet.template.md) with [../../scripts/render-sheet-markdown.js](../../scripts/render-sheet-markdown.js) when you want a readable sheet file from normalized JSON.
 Render Markdown only after the calculator output has been validated and saved as schema-shaped JSON.
 
 Example:
 
 ```sh
-node skills/coc-investigator-builder/scripts/render-sheet-markdown.js \
-  --input output/json/harvey-walters.json \
-  --output output/markdown/harvey-walters.md
+node skills/coc-keeper/scripts/render-sheet-markdown.js \
+  --input play-data/investigators/harvey-walters.json \
+  --output play-data/investigators/harvey-walters.md
 ```
