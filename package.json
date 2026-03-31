@@ -1,0 +1,12 @@
+{
+  "name": "coc-skills",
+  "private": true,
+  "dependencies": {
+    "commander": "^14.0.0",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "typescript": "^5.9.2"
+  }
+}
