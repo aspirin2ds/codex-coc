@@ -28,7 +28,7 @@ Ask this before starting from zero:
 If the player has a sheet:
 
 - preserve their numbers first
-- use the bundled investigator-building workflow to normalize, complete missing fields, and save JSON/Markdown
+- use the bundled investigator-building workflow to normalize, complete missing fields, and save JSON
 - only ask follow-up questions for missing identity, skills, or background hooks
 
 If the player does not have a sheet, continue to Step 3.
@@ -101,7 +101,7 @@ When the narrative inputs are stable:
 1. use the bundled rules-search workflow for any rule uncertainty
 2. use the bundled investigator-building workflow to finish the sheet
 3. save JSON first
-4. optionally render Markdown
+4. keep the canonical sheet as JSON
 5. show the player a compact summary
 
 Suggested summary shape:

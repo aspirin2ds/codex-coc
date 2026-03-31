@@ -16,8 +16,7 @@ Prefer rule-grounded sheet building over improvising percentages or derived stat
 3. If the search result is still ambiguous, read the relevant local docs directly under `./docs`.
 4. When the final attributes and occupation formula are known, run [../../scripts/calc-sheet.js](../../scripts/calc-sheet.js) to calculate and validate the repetitive math.
 5. Save the normalized investigator data to JSON using [../../schemas/investigator-sheet.schema.json](../../schemas/investigator-sheet.schema.json), with the default canonical location under `play-data/investigators/`.
-6. Optionally render that JSON to Markdown with [../../scripts/render-sheet-markdown.js](../../scripts/render-sheet-markdown.js) and [../../templates/investigator-sheet.template.md](../../templates/investigator-sheet.template.md), also under `play-data/investigators/` by default.
-7. State assumptions clearly when the user did not provide enough inputs.
+6. State assumptions clearly when the user did not provide enough inputs.
 
 ## Workflow
 
@@ -59,7 +58,7 @@ Do not use it to replace rule lookup.
 Use it after the rules have already told you which formula and ranges apply.
 
 Validate the output before moving on.
-The calculator step comes before any saved artifact or Markdown rendering.
+The calculator step comes before any saved JSON artifact.
 
 ### 3. Choose a build path
 
@@ -92,10 +91,10 @@ If the user asks for a specific archetype that does not map cleanly to a listed 
 Use this output order:
 1. generate the data with the calculator, then validate it
 2. save the data to JSON using the schema in `play-data/investigators/`
-3. optionally render that JSON to Markdown with the template script in the same `play-data/investigators/` area
+3. keep the JSON file as the source of truth for later play and updates
 
 The JSON file is the source of truth.
-Markdown is a derived presentation format, not the canonical record.
+Do not generate a parallel Markdown sheet.
 
 ## Reference Files
 
@@ -104,11 +103,9 @@ Markdown is a derived presentation format, not the canonical record.
 - [derived-stats.md](derived-stats.md)
   High-signal formulas, rule order, and where to verify them.
 - [output-template.md](output-template.md)
-  Compact output shape for JSON-first and optional Markdown output.
+  Compact output shape for JSON-only investigator output.
 - [../../scripts/calc-sheet.js](../../scripts/calc-sheet.js)
   Deterministic calculator and validator for the repetitive sheet math.
-- [../../scripts/render-sheet-markdown.js](../../scripts/render-sheet-markdown.js)
-  Render a normalized investigator JSON file into a Markdown sheet using the repo template.
 
 ## Constraints
 

@@ -26,7 +26,7 @@ The default flow is:
 6. Read [references/keeper-best-practices.md](references/keeper-best-practices.md) when you need rule-grounded Keeper habits for clues, pacing, warnings, SAN fallout, and scene closure.
 7. Use [scripts/session-state.js](scripts/session-state.js) to initialize or update a lightweight session state file under `play-data/sessions/` for scene progression, NPC status, clues, and countdown tracking.
 8. Use [scripts/scene-summary.js](scripts/scene-summary.js) when you need a compact scene recap or a clean pause-point handoff.
-9. Use [references/rules-search/guide.md](references/rules-search/guide.md) for rules lookup and [references/investigator-builder/guide.md](references/investigator-builder/guide.md) plus the bundled builder scripts for final sheet math and persistence.
+9. Use [references/rules-search/guide.md](references/rules-search/guide.md) for rules lookup and [references/investigator-builder/guide.md](references/investigator-builder/guide.md) plus the bundled builder scripts for final sheet math and JSON persistence.
 
 ## Character Creation Workflow
 
@@ -69,7 +69,7 @@ Before asking for concept or stats, explain what scenario or story the table is 
 9. Finalize
    - use the bundled investigator-building workflow
    - save JSON first
-   - optionally render Markdown
+   - keep the saved output in JSON only
    - summarize assumptions
 
 ### Character creation rules
@@ -152,13 +152,11 @@ When acting out-of-character:
 - [references/rules-search/guide.md](references/rules-search/guide.md)
   Internal rules-search workflow for finding the right local rulebook passages with precise file references.
 - [references/investigator-builder/guide.md](references/investigator-builder/guide.md)
-  Internal sheet-building workflow for normalization, derived stats, persistence, and Markdown export.
+  Internal sheet-building workflow for normalization, derived stats, and JSON persistence.
 - [scripts/keeper-bootstrap.js](scripts/keeper-bootstrap.js)
   Prints a compact kickoff checklist and opening scene text.
 - [scripts/calc-sheet.js](scripts/calc-sheet.js)
   Calculates and validates the repetitive investigator math, then saves JSON under `play-data/investigators/`.
-- [scripts/render-sheet-markdown.js](scripts/render-sheet-markdown.js)
-  Renders a Markdown investigator sheet from normalized JSON into `play-data/investigators/`.
 - [scripts/roll-dice.js](scripts/roll-dice.js)
   Rolls standard dice expressions such as `1d100` and `1d4+1`.
 - [scripts/keeper-check.js](scripts/keeper-check.js)
@@ -166,7 +164,7 @@ When acting out-of-character:
 - [scripts/session-state.js](scripts/session-state.js)
   Initializes, updates, and prints a session state JSON file under `play-data/sessions/` for timeline, clues, NPC status, current objective, and keyed investigator state such as HP, SAN, MP, wounds, insanity flags, inventory notes, and location.
 - [scripts/scene-summary.js](scripts/scene-summary.js)
-  Generates a Markdown-style scene recap from explicit events and optional session state.
+  Generates a JSON scene recap from explicit events and optional session state.
 
 ## Constraints
 

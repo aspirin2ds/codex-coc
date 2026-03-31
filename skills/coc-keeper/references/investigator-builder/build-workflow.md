@@ -42,7 +42,7 @@ If the search still leaves uncertainty, read the relevant `./docs` file directly
 9. Run `node skills/coc-keeper/scripts/calc-sheet.js` once the final inputs are stable.
 10. Validate the computed result and resolve contradictions.
 11. Save the normalized sheet as schema-valid JSON under `play-data/investigators/`.
-12. Only after the JSON exists, optionally render it to Markdown in the same `play-data/investigators/` area.
+12. Keep that JSON as the only persisted investigator artifact.
 
 The script does not choose the occupation for you.
 It accelerates the math and catches contradictions once you know the formula and CR range.
@@ -76,7 +76,7 @@ Before saving the JSON, verify:
 - the background does not contradict the occupation or CR
 
 Use the calculator warnings as a first pass, then do a quick human check.
-Once the JSON is correct, any Markdown output should be rendered from that JSON instead of hand-formatting another source.
+Once the JSON is correct, update that JSON directly instead of generating a second presentation file.
 
 ## 7. If the user asks for a fast build
 

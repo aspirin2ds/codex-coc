@@ -32,10 +32,10 @@ function parseArgs(argv) {
       process.stdout.write(
         [
           "Usage:",
-          "  node skills/coc-keeper/scripts/scene-summary.js [--state <session.json>] [--title 标题] [--result setback|mixed|strong_success] [--event 文本] [--discovery 文本] [--hook 文本] [--output file.md]",
+          "  node skills/coc-keeper/scripts/scene-summary.js [--state <session.json>] [--title 标题] [--result setback|mixed|strong_success] [--event 文本] [--discovery 文本] [--hook 文本] [--output file.json]",
           "",
           "Example:",
-          "  node skills/coc-keeper/scripts/scene-summary.js --state tmp/coc-session.json --title 黑水湖夜袭 --result strong_success --event 救出简 --discovery 黑水湖有转运装置 --hook 天亮后回镇汇报",
+          "  node skills/coc-keeper/scripts/scene-summary.js --state tmp/coc-session.json --title 黑水湖夜袭 --result strong_success --event 救出简 --discovery 黑水湖有转运装置 --hook 天亮后回镇汇报 --output tmp/scene-summary.json",
         ].join("\n"),
       );
       process.exit(0);
@@ -58,40 +58,28 @@ function labelResult(result) {
   return "混合成功";
 }
 
-function bulletList(items) {
-  if (!items || !items.length) return "- 无";
-  return items.map((item) => `- ${item}`).join("\n");
-}
-
 function renderSummary(args, state) {
   const current = state?.current || {};
-  const sceneState = [
-    `- 模组：${state?.scenario || "—"}`,
-    `- 当前日程：第 ${current.day ?? "—"} 日 / ${current.timeOfDay || "—"}`,
-    `- 当前地点：${current.location || "—"}`,
-    `- 当前目标：${current.objective || "—"}`,
-    `- 阶段结果：${labelResult(args.result)}`,
-  ].join("\n");
-
   const discoveries = args.discoveries.length ? args.discoveries : state?.clues || [];
   const hooks = args.hooks.length ? args.hooks : state?.hooks || [];
 
-  return [
-    `# ${args.title}`,
-    "",
-    "## 当前状态",
-    sceneState,
-    "",
-    "## 本段发生了什么",
-    bulletList(args.events),
-    "",
-    "## 新获得的线索",
-    bulletList(discoveries),
-    "",
-    "## 下次可接续的钩子",
-    bulletList(hooks),
-    "",
-  ].join("\n");
+  return {
+    title: args.title,
+    result: {
+      code: args.result,
+      label: labelResult(args.result),
+    },
+    state: {
+      scenario: state?.scenario || null,
+      day: current.day ?? null,
+      timeOfDay: current.timeOfDay || null,
+      location: current.location || null,
+      objective: current.objective || null,
+    },
+    events: args.events,
+    discoveries,
+    hooks,
+  };
 }
 
 function main() {
@@ -101,10 +89,10 @@ function main() {
 
   if (args.output) {
     fs.mkdirSync(path.dirname(args.output), { recursive: true });
-    fs.writeFileSync(args.output, summary);
+    fs.writeFileSync(args.output, `${JSON.stringify(summary, null, 2)}\n`);
   }
 
-  process.stdout.write(summary);
+  process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
 }
 
 main();

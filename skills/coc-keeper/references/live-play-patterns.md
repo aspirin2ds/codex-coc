@@ -135,7 +135,7 @@ When the user wants to stop or you want a clean handoff, use `scene-summary.js`.
 Examples:
 
 ```bash
-node skills/coc-keeper/scripts/scene-summary.js --state play-data/sessions/current-session.json --title 黑水湖夜袭 --result strong_success --event 救出简 --event 打毁转运装置 --hook 天亮后返回贝宁顿 --output play-data/summaries/heishuihu-night-raid.md
+node skills/coc-keeper/scripts/scene-summary.js --state play-data/sessions/current-session.json --title 黑水湖夜袭 --result strong_success --event 救出简 --event 打毁转运装置 --hook 天亮后返回贝宁顿 --output play-data/summaries/heishuihu-night-raid.json
 ```
 
 This is especially useful for:
