@@ -197,3 +197,5 @@ cmake/sources/*.txt
 test/integration/bun-types/fixture/bun.lock
 output
 play-data
+.claude
+.codex
